@@ -1,7 +1,7 @@
 package freelancer.backendtfg.infrastructure.repository;
 
 import freelancer.backendtfg.infrastructure.repository.entity.TimeEntity;
-import freelancer.backendtfg.infrastructure.repository.port.JpaTimeRepository;
+import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaTimeRepository;
 import freelancer.backendtfg.infrastructure.repository.port.TimeRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

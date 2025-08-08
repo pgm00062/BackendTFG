@@ -22,12 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users/login", "/users/register").permitAll()
+                .antMatchers("/users/login", "/users/register", "/swagger-ui.html",
+                        "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/webjars/**").permitAll()
                 .anyRequest().authenticated();
 
         // Filtro personalizado antes del filtro estándar de Spring Security
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
-
-

@@ -1,6 +1,7 @@
 package freelancer.backendtfg.infrastructure.repository;
 
 import freelancer.backendtfg.infrastructure.repository.entity.InvoiceEntity;
+import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaInvoiceRepository;
 import freelancer.backendtfg.infrastructure.repository.port.InvoiceRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

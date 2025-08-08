@@ -1,7 +1,7 @@
 package freelancer.backendtfg.domain.mapper;
 
-import freelancer.backendtfg.infrastructure.controller.dto.input.InvoiceCreateInputDto;
-import freelancer.backendtfg.infrastructure.controller.dto.output.InvoiceOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.input.invoicesInput.InvoiceCreateInputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.invoicesOutput.InvoiceOutputDto;
 import freelancer.backendtfg.infrastructure.repository.entity.InvoiceEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,7 +1,7 @@
 package freelancer.backendtfg.infrastructure.repository;
 
 import freelancer.backendtfg.infrastructure.repository.entity.UserEntity;
-import freelancer.backendtfg.infrastructure.repository.port.JpaUserRepository;
+import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaUserRepository;
 import freelancer.backendtfg.infrastructure.repository.port.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

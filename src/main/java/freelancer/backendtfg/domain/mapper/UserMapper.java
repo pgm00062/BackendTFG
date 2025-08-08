@@ -1,9 +1,9 @@
 package freelancer.backendtfg.domain.mapper;
 
-import freelancer.backendtfg.infrastructure.controller.dto.input.UserRegisterInputDto;
-import freelancer.backendtfg.infrastructure.controller.dto.output.UserLoginOutputDto;
-import freelancer.backendtfg.infrastructure.controller.dto.output.UserProfileOutputDto;
-import freelancer.backendtfg.infrastructure.controller.dto.output.UserRegisterOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.input.usersInput.UserRegisterInputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.usersOutput.UserLoginOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.usersOutput.UserProfileOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.usersOutput.UserRegisterOutputDto;
 import freelancer.backendtfg.infrastructure.repository.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

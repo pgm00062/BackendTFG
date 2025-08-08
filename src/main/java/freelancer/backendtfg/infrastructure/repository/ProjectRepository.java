@@ -1,7 +1,7 @@
 package freelancer.backendtfg.infrastructure.repository;
 
 import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
-import freelancer.backendtfg.infrastructure.repository.port.JpaProjectRepository;
+import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaProjectRepository;
 import freelancer.backendtfg.infrastructure.repository.port.ProjectRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

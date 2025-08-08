@@ -1,7 +1,7 @@
 package freelancer.backendtfg.domain.mapper;
 
-import freelancer.backendtfg.infrastructure.controller.dto.input.TimeStartInputDto;
-import freelancer.backendtfg.infrastructure.controller.dto.output.TimeSessionOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.input.timesInput.TimeStartInputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionOutputDto;
 import freelancer.backendtfg.infrastructure.repository.entity.TimeEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
