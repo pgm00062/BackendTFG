@@ -30,7 +30,7 @@ public class UserLoginUseCaseImpl implements UserLoginUseCase {
             throw new InvalidCredentialsException("Contraseña incorrecta");
         }
 
-        // ⬅️ Generar token con el email del usuario (podemos incluir más info posteriormente)
+        //Generar token con el email del usuario
         String token = jwtUtils.generateToken(user.getEmail());
 
         return new UserLoginOutputDto(
@@ -41,5 +41,4 @@ public class UserLoginUseCaseImpl implements UserLoginUseCase {
                 token
         );
     }
-
 }
