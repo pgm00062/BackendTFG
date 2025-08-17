@@ -6,6 +6,7 @@ import freelancer.backendtfg.application.port.projectUseCasePort.DeleteProjectUs
 import freelancer.backendtfg.application.port.projectUseCasePort.ListUserProjectsUseCase;
 import freelancer.backendtfg.application.port.projectUseCasePort.SearchUserProjectsByNameUseCase;
 import freelancer.backendtfg.application.port.projectUseCasePort.UpdateProjectStatusUseCase;
+import freelancer.backendtfg.application.port.projectUseCasePort.GetProjectByIdUseCase;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectCreateInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,7 @@ public class ProjectController {
     private final ListUserProjectsUseCase listUserProjectsUseCase;
     private final SearchUserProjectsByNameUseCase searchUserProjectsByNameUseCase;
     private final UpdateProjectStatusUseCase updateProjectStatusUseCase;
+    private final GetProjectByIdUseCase getProjectByIdUseCase;
 
     @ApiOperation(value = "Crear proyecto", notes = "Crea un nuevo proyecto para el usuario autenticado.")
     @ApiResponses(value = {
@@ -128,5 +130,20 @@ public class ProjectController {
             @RequestParam(defaultValue = "10") int size) {
         Page<ProjectOutputDto> projects = searchUserProjectsByNameUseCase.searchProjects(email, name, PageRequest.of(page, size));
         return ResponseEntity.ok(projects);
+    }
+
+    @ApiOperation(value = "Obtener proyecto por ID", notes = "Obtiene la información de un proyecto por su ID si pertenece al usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Proyecto encontrado"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 404, message = "Proyecto no encontrado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectOutputDto> getProjectById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal String email) {
+        ProjectOutputDto project = getProjectByIdUseCase.getProjectById(id, email);
+        return ResponseEntity.ok(project);
     }
 }
