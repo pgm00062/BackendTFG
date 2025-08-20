@@ -13,8 +13,9 @@ public class UserLogoutUseCaseImpl implements UserLogoutUseCase {
     private final UserRepositoryPort userRepository;
 
     public void logout(String userEmail) {
-        UserEntity user = userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-
+        // Validar que el usuario existe
+        userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        // Logout simple: no se almacena nada, el frontend debe eliminar el token.
     }
 }

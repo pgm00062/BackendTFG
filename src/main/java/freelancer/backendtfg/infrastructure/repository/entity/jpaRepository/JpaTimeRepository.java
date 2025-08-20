@@ -4,6 +4,7 @@ import freelancer.backendtfg.infrastructure.repository.entity.TimeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -47,4 +48,9 @@ public interface JpaTimeRepository extends JpaRepository<TimeEntity, Long> {
     // Contar sesiones por proyecto y usuario
     @Query("SELECT COUNT(t) FROM TimeEntity t WHERE t.project.id = :projectId AND t.user.email = :userEmail")
     long countByProjectIdAndUserEmail(@Param("projectId") Long projectId, @Param("userEmail") String userEmail);
+
+    @Modifying
+    @Query("DELETE FROM TimeEntity t WHERE t.project.id = :projectId")
+    void deleteByProjectId(@Param("projectId") Long projectId);
+
 } 

@@ -1,11 +1,6 @@
 package freelancer.backendtfg.infrastructure.controller;
 
-import freelancer.backendtfg.application.port.userUseCasePort.ChangePasswordUseCase;
-import freelancer.backendtfg.application.port.userUseCasePort.DeleteUserUseCase;
-import freelancer.backendtfg.application.port.userUseCasePort.GetUserProfileUseCase;
-import freelancer.backendtfg.application.port.userUseCasePort.UserLoginUseCase;
-import freelancer.backendtfg.application.port.userUseCasePort.UserRegisterUseCase;
-import freelancer.backendtfg.application.port.userUseCasePort.UpdateUserProfileUseCase;
+import freelancer.backendtfg.application.port.userUseCasePort.*;
 import freelancer.backendtfg.infrastructure.controller.dto.input.usersInput.ChangePasswordInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.input.usersInput.UserLoginInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.input.usersInput.UserRegisterInputDto;
@@ -34,6 +29,7 @@ public class UserController {
     private final UpdateUserProfileUseCase updateUserProfileUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
     private final ChangePasswordUseCase changePasswordUseCase;
+    private final UserLogoutUseCase userLogoutUseCase;
 
     @ApiOperation(value = "Login de usuario", notes= "EL usuario hace login a partir del email y la contraseña. Se" +
             "genera un token de autenticación para el posterior uso de los demás endpoints")
@@ -113,5 +109,16 @@ public class UserController {
     public ResponseEntity<Void> deleteCurrentUser(@AuthenticationPrincipal String email) {
         deleteUserUseCase.deleteByEmail(email);
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "Logout de usuario", notes = "El usuario cierra sesión. El token debe ser eliminado en el cliente.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Logout exitoso"),
+            @ApiResponse(code = 401, message = "No autorizado")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal String email) {
+        userLogoutUseCase.logout(email);
+        return ResponseEntity.ok().build();
     }
 }

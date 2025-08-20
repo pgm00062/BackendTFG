@@ -37,4 +37,7 @@ public interface TimeRepositoryPort {
     
     // Contar sesiones por proyecto y usuario
     long countByProjectIdAndUserEmail(Long projectId, String userEmail);
+
+    void deleteByProjectId(Long projectId);
+
 } 

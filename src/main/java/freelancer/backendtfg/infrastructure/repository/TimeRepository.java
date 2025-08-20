@@ -70,4 +70,10 @@ public class TimeRepository implements TimeRepositoryPort {
     public long countByProjectIdAndUserEmail(Long projectId, String userEmail) {
         return jpaRepository.countByProjectIdAndUserEmail(projectId, userEmail);
     }
+
+    @Override
+    public void deleteByProjectId(Long projectId) {
+        jpaRepository.deleteByProjectId(projectId);
+    }
+
 } 
