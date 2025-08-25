@@ -1,4 +1,4 @@
-package freelancer.backendtfg.application.projectUseCase;
+package freelancer.backendtfg.application.useCaseImpl.projectUseCaseImpl;
 
 import freelancer.backendtfg.application.port.projectUseCasePort.GetProjectByIdUseCase;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;

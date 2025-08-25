@@ -1,13 +1,17 @@
 package freelancer.backendtfg.infrastructure.repository;
 
+import freelancer.backendtfg.domain.enums.ProjectStatus;
 import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
 import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaProjectRepository;
 import freelancer.backendtfg.infrastructure.repository.port.ProjectRepositoryPort;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -38,5 +42,15 @@ public class ProjectRepository implements ProjectRepositoryPort {
     @Override
     public void delete(ProjectEntity project) {
         jpaRepository.delete(project);
+    }
+
+    @Override
+    public BigDecimal getTotalBudgetByStatus(ProjectStatus status, LocalDate fromDate){
+        return jpaRepository.getTotalBudgetByStatusAndDateRange(status, fromDate);
+    }
+
+    @Override
+    public Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable) {
+        return jpaRepository.findByUserIdAndStatus(id, status, pageable);
     }
 } 

@@ -1,12 +1,7 @@
 package freelancer.backendtfg.infrastructure.controller;
 
-import freelancer.backendtfg.application.port.projectUseCasePort.CreateProjectUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.UpdateProjectUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.DeleteProjectUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.ListUserProjectsUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.SearchUserProjectsByNameUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.UpdateProjectStatusUseCase;
-import freelancer.backendtfg.application.port.projectUseCasePort.GetProjectByIdUseCase;
+import freelancer.backendtfg.application.port.projectUseCasePort.*;
+import freelancer.backendtfg.domain.enums.ProjectStatus;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectCreateInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectStatusUpdateInputDto;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
@@ -35,6 +32,7 @@ public class ProjectController {
     private final SearchUserProjectsByNameUseCase searchUserProjectsByNameUseCase;
     private final UpdateProjectStatusUseCase updateProjectStatusUseCase;
     private final GetProjectByIdUseCase getProjectByIdUseCase;
+    private final GetStatiticsUseCase getStatiticsUseCase;
 
     @ApiOperation(value = "Crear proyecto", notes = "Crea un nuevo proyecto para el usuario autenticado.")
     @ApiResponses(value = {
@@ -146,4 +144,39 @@ public class ProjectController {
         ProjectOutputDto project = getProjectByIdUseCase.getProjectById(id, email);
         return ResponseEntity.ok(project);
     }
+
+    @ApiOperation(value = "Obtener estadísticas de ganancias", notes = "Obtiene las estadísticas de ganancias del usuario autenticado, incluyendo ganancias del último mes y ganancias pendientes.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Estadísticas obtenidas exitosamente"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/earnings-last-month")
+    public ResponseEntity<BigDecimal> getEarningsLastMonth() {
+        BigDecimal earnings = getStatiticsUseCase.getEarningsLastMonth();
+        return ResponseEntity.ok(earnings);
+    }
+
+    @ApiOperation(value = "Obtener ganancias pendientes", notes = "Obtiene las ganancias pendientes del usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ganancias pendientes obtenidas exitosamente"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/pending-earnings")
+    public ResponseEntity<BigDecimal> getPendingEarnings() {
+        BigDecimal pendingEarnings = getStatiticsUseCase.getPendingEarnings();
+        return ResponseEntity.ok(pendingEarnings);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Page<ProjectOutputDto>> listProjectsByStatus(
+            @AuthenticationPrincipal String email,
+            @RequestParam ProjectStatus status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ProjectOutputDto> projects = listUserProjectsUseCase.listProjectsByStatus(email, status, PageRequest.of(page, size));
+        return ResponseEntity.ok(projects);
+    }
+
 }
