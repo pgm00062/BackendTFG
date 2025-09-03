@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,4 +78,27 @@ public class TimeRepository implements TimeRepositoryPort {
         jpaRepository.deleteByProjectId(projectId);
     }
 
+    @Override
+    public Optional<TimeEntity> pauseSession(Long id) {
+        LocalDateTime now = LocalDateTime.now();
+        int updated = jpaRepository.pauseSession(id, now);
+        if (updated > 0) {
+            return jpaRepository.findById(id);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<TimeEntity> resumeSession(Long id) {
+        int updated = jpaRepository.resumeSession(id);
+        if (updated > 0) {
+            return jpaRepository.findById(id);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDate date) {
+        return jpaRepository.findCompletedSessionsByUserEmailAndDate(userEmail, date);
+    }
 } 

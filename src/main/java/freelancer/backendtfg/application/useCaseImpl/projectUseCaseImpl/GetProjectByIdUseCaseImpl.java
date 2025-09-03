@@ -2,6 +2,7 @@ package freelancer.backendtfg.application.useCaseImpl.projectUseCaseImpl;
 
 import freelancer.backendtfg.application.port.projectUseCasePort.GetProjectByIdUseCase;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDtoParcial;
 import freelancer.backendtfg.infrastructure.repository.port.ProjectRepositoryPort;
 import freelancer.backendtfg.infrastructure.repository.port.UserRepositoryPort;
 import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
@@ -37,4 +38,5 @@ public class GetProjectByIdUseCaseImpl implements GetProjectByIdUseCase {
         // Devolver DTO de salida
         return projectMapper.toOutputDto(project);
     }
+
 }

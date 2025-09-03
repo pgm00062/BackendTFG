@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long> {
     Page<ProjectEntity> findByUserId(Long userId, Pageable pageable);
@@ -16,4 +17,5 @@ public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long>
     @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND p.endDate >= :fromDate")
     BigDecimal getTotalBudgetByStatusAndDateRange(@Param("status") ProjectStatus status, @Param("fromDate") LocalDate fromDate);
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
+    List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
 }

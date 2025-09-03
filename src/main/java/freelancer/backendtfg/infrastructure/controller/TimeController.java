@@ -3,10 +3,12 @@ package freelancer.backendtfg.infrastructure.controller;
 import freelancer.backendtfg.application.port.timeUseCasePort.StartTimeSessionUseCase;
 import freelancer.backendtfg.application.port.timeUseCasePort.EndTimeSessionUseCase;
 import freelancer.backendtfg.application.port.timeUseCasePort.ListUserTimeSessionsUseCase;
+import freelancer.backendtfg.application.port.timeUseCasePort.PauseResumeTimeSessionUseCase;
 import freelancer.backendtfg.application.port.timeUseCasePort.GetActiveTimeSessionUseCase;
 import freelancer.backendtfg.application.port.timeUseCasePort.GetProjectTotalTimeUseCase;
 import freelancer.backendtfg.infrastructure.controller.dto.input.timesInput.TimeStartInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.input.timesInput.TimeEndInputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionDailyOutputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionOutputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectTotalTimeOutputDto;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -32,6 +36,7 @@ public class TimeController {
     private final ListUserTimeSessionsUseCase listUserTimeSessionsUseCase;
     private final GetActiveTimeSessionUseCase getActiveTimeSessionUseCase;
     private final GetProjectTotalTimeUseCase getProjectTotalTimeUseCase;
+    private final PauseResumeTimeSessionUseCase pauseResumeTimeSessionUseCase;
 
     @ApiOperation(value = "Iniciar sesión de tiempo", notes = "Inicia una nueva sesión de tiempo para el usuario autenticado.")
     @ApiResponses(value = {
@@ -106,4 +111,49 @@ public class TimeController {
         ProjectTotalTimeOutputDto totalTime = getProjectTotalTimeUseCase.getProjectTotalTime(email, projectId);
         return ResponseEntity.ok(totalTime);
     }
+
+        @ApiOperation(value = "Pausar sesión de tiempo", notes = "Pausa la sesión de tiempo activa para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sesión pausada correctamente"),
+            @ApiResponse(code = 400, message = "Sesión ya pausada"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 404, message = "No hay sesión activa"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @PostMapping("/pause")
+    public ResponseEntity<TimeSessionOutputDto> pauseSession(@AuthenticationPrincipal String email) {
+        TimeSessionOutputDto pausedSession = pauseResumeTimeSessionUseCase.pauseSession(email);
+        return ResponseEntity.ok(pausedSession);
+    }
+
+    @ApiOperation(value = "Reanudar sesión de tiempo", notes = "Reanuda la sesión de tiempo pausada para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sesión reanudada correctamente"),
+            @ApiResponse(code = 400, message = "Sesión no está pausada"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 404, message = "No hay sesión activa"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @PostMapping("/resume")
+    public ResponseEntity<TimeSessionOutputDto> resumeSession(@AuthenticationPrincipal String email) {
+        TimeSessionOutputDto resumedSession = pauseResumeTimeSessionUseCase.resumeSession(email);
+        return ResponseEntity.ok(resumedSession);
+    }
+
+@ApiOperation(value = "Tiempo total diario", notes = "Obtiene el tiempo total trabajado en un día específico para el usuario autenticado, sumando todas las sesiones finalizadas.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tiempo total obtenido"),
+            @ApiResponse(code = 400, message = "Fecha inválida"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/total/day")
+    public ResponseEntity<TimeSessionDailyOutputDto> getDailyTotalTime(
+            @AuthenticationPrincipal String email,
+            @RequestParam String date) {  // Formato esperado: YYYY-MM-DD
+        LocalDate localDate = LocalDate.parse(date);
+        TimeSessionDailyOutputDto totalTime = getProjectTotalTimeUseCase.getDailyTotalTime(email, localDate);
+        return ResponseEntity.ok(totalTime);
+    }
+
 }

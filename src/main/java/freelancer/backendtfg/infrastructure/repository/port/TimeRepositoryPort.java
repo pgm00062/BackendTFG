@@ -4,6 +4,7 @@ import freelancer.backendtfg.infrastructure.repository.entity.TimeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +41,9 @@ public interface TimeRepositoryPort {
 
     void deleteByProjectId(Long projectId);
 
+    Optional<TimeEntity> pauseSession(Long id);
+    
+    Optional<TimeEntity> resumeSession(Long id);
+
+    List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDate date);
 } 

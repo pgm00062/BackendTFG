@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface ProjectRepositoryPort {
@@ -17,4 +18,5 @@ public interface ProjectRepositoryPort {
     void delete(ProjectEntity project);
     BigDecimal getTotalBudgetByStatus(ProjectStatus status, LocalDate fromDate);
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
+    List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
 } 

@@ -4,6 +4,7 @@ import freelancer.backendtfg.application.port.projectUseCasePort.*;
 import freelancer.backendtfg.domain.enums.ProjectStatus;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectCreateInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDtoParcial;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectStatusUpdateInputDto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
@@ -179,4 +181,9 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+    @GetMapping("/getLastThree")
+    public ResponseEntity<List<ProjectOutputDtoParcial>> getLastThreeProjects(@AuthenticationPrincipal String email){
+        List<ProjectOutputDtoParcial> projects = listUserProjectsUseCase.getLastProject(email);
+        return ResponseEntity.ok(projects);
+    }
 }

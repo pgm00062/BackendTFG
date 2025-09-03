@@ -44,14 +44,24 @@ public class TimeEntity {
     @Column(length = 500)
     private String description; // Descripción opcional de la tarea realizada
 
+    @Column(nullable = false)
+    private boolean isPaused = false; // Indica si la sesión está pausada
+
+    @Column(nullable = true)
+    private LocalDateTime pausedAt; // Momento en que se pausó la sesión
+
     // Método para calcular la duración de la sesión
     public Duration getDuration() {
         if (startTime == null) {
             return Duration.ZERO;
         }
-        
         LocalDateTime end = (endTime != null) ? endTime : LocalDateTime.now();
-        return Duration.between(startTime, end);
+        Duration total = Duration.between(startTime, end);
+        if (isPaused && pausedAt != null) {
+            Duration pausedDuration = Duration.between(pausedAt, LocalDateTime.now());
+            total = total.minus(pausedDuration);
+        }
+        return total;
     }
 
     // Método para obtener la duración en minutos
@@ -78,5 +88,31 @@ public class TimeEntity {
     // Método para validar que la sesión puede ser iniciada
     public boolean canBeStarted() {
         return !isActive || (startTime == null);
+    }
+
+    // Método para pausar la sesión
+    public void pauseSession() {
+        if (isActive && !isPaused) {
+            this.isPaused = true;
+            this.pausedAt = LocalDateTime.now();
+        }
+    }
+
+    // Método para reanudar la sesión
+    public void resumeSession() {
+        if (isActive && isPaused) {
+            this.isPaused = false;
+            this.pausedAt = null;
+        }
+    }
+
+    // Método para validar que la sesión puede ser pausada
+    public boolean canBePaused() {
+        return isActive && !isPaused;
+    }
+
+    // Método para validar que la sesión puede ser reanudada
+    public boolean canBeResumed() {
+        return isActive && isPaused;
     }
 } 

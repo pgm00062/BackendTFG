@@ -2,6 +2,7 @@ package freelancer.backendtfg.application.useCaseImpl.timeUseCaseImpl;
 
 import freelancer.backendtfg.application.port.timeUseCasePort.GetProjectTotalTimeUseCase;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectTotalTimeOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionDailyOutputDto;
 import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
 import freelancer.backendtfg.infrastructure.repository.entity.TimeEntity;
 import freelancer.backendtfg.infrastructure.repository.entity.UserEntity;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -83,5 +85,18 @@ public class GetProjectTotalTimeUseCaseImpl implements GetProjectTotalTimeUseCas
         } else {
             return String.format("%dm", minutes);
         }
+    }
+
+    @Override
+    public TimeSessionDailyOutputDto getDailyTotalTime(String userEmail, LocalDate date) {
+        List<TimeEntity> sessions = timeRepository.findCompletedSessionsByUserEmailAndDate(userEmail, date);
+        
+        long totalMinutes = sessions.stream()
+                .mapToLong(TimeEntity::getDurationInMinutes)
+                .sum();
+        
+        double totalHours = totalMinutes / 60.0;
+        
+        return new TimeSessionDailyOutputDto(totalHours, totalMinutes);
     }
 } 

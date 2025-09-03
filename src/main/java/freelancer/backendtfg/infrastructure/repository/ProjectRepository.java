@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -52,5 +53,10 @@ public class ProjectRepository implements ProjectRepositoryPort {
     @Override
     public Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable) {
         return jpaRepository.findByUserIdAndStatus(id, status, pageable);
+    }
+
+    @Override
+    public List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId) {
+        return jpaRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
     }
 } 

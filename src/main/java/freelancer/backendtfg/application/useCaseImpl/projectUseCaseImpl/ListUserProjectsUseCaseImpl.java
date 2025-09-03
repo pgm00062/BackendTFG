@@ -4,6 +4,8 @@ import freelancer.backendtfg.application.port.projectUseCasePort.ListUserProject
 import freelancer.backendtfg.domain.enums.ProjectStatus;
 import freelancer.backendtfg.domain.mapper.ProjectMapper;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
+import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDtoParcial;
+import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
 import freelancer.backendtfg.infrastructure.repository.entity.UserEntity;
 import freelancer.backendtfg.infrastructure.repository.port.ProjectRepositoryPort;
 import freelancer.backendtfg.infrastructure.repository.port.UserRepositoryPort;
@@ -12,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +43,18 @@ public class ListUserProjectsUseCaseImpl implements ListUserProjectsUseCase {
         Page<ProjectOutputDto> page = projectRepository.findByUserIdAndStatus(user.getId(), status, pageable)
                 .map(projectMapper::toOutputDto);
         return page;
+    }
+
+    @Override
+    public List<ProjectOutputDtoParcial> getLastProject(String userEmail){
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+        // 2. Obtener últimos 3 proyectos
+        List<ProjectEntity> lastProjects = projectRepository.findTop3ByUserIdOrderByCreatedAtDesc(user.getId());
+
+        // 3. Mapear a DTO parcial
+        return lastProjects.stream()
+                .map(projectMapper::toOutputDtoParcial)
+                .collect(Collectors.toList());
     }
 } 
