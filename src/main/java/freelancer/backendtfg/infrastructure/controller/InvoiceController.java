@@ -84,7 +84,7 @@ public class InvoiceController {
             @ApiResponse(code = 404, message = "Factura no encontrada"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    @GetMapping("/{id}")
+    @GetMapping("/getInvoice/{id}")
     public ResponseEntity<InvoiceOutputDto> getInvoiceById(
             @PathVariable Long id,
             @AuthenticationPrincipal String email) {
@@ -99,7 +99,7 @@ public class InvoiceController {
             @ApiResponse(code = 404, message = "Factura no encontrada"),
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteInvoice(
             @PathVariable Long id,
             @AuthenticationPrincipal String email) {
