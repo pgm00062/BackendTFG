@@ -98,7 +98,7 @@ public class TimeRepository implements TimeRepositoryPort {
     }
 
     @Override
-    public List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDate date) {
-        return jpaRepository.findCompletedSessionsByUserEmailAndDate(userEmail, date);
+    public List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        return jpaRepository.findCompletedSessionsByUserEmailAndDate(userEmail, startOfDay, endOfDay);
     }
 } 

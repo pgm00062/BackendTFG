@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -112,7 +113,7 @@ public class TimeController {
         return ResponseEntity.ok(totalTime);
     }
 
-        @ApiOperation(value = "Pausar sesión de tiempo", notes = "Pausa la sesión de tiempo activa para el usuario autenticado.")
+    @ApiOperation(value = "Pausar sesión de tiempo", notes = "Pausa la sesión de tiempo activa para el usuario autenticado.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sesión pausada correctamente"),
             @ApiResponse(code = 400, message = "Sesión ya pausada"),
@@ -140,20 +141,29 @@ public class TimeController {
         return ResponseEntity.ok(resumedSession);
     }
 
-@ApiOperation(value = "Tiempo total diario", notes = "Obtiene el tiempo total trabajado en un día específico para el usuario autenticado, sumando todas las sesiones finalizadas.")
+    @ApiOperation(value = "Tiempo total diario", notes = "Obtiene el tiempo total trabajado en un día específico para el usuario autenticado, sumando todas las sesiones finalizadas.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Tiempo total obtenido"),
-            @ApiResponse(code = 400, message = "Fecha inválida"),
-            @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 500, message = "Error interno del servidor")
+        @ApiResponse(code = 200, message = "Tiempo total obtenido"),
+        @ApiResponse(code = 400, message = "Fecha inválida"),
+        @ApiResponse(code = 401, message = "No autorizado"),
+        @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     @GetMapping("/total/day")
-    public ResponseEntity<TimeSessionDailyOutputDto> getDailyTotalTime(
+        public ResponseEntity<TimeSessionDailyOutputDto> getDailyTotalTime(
             @AuthenticationPrincipal String email,
             @RequestParam String date) {  // Formato esperado: YYYY-MM-DD
+
+        // Parsear la fecha
         LocalDate localDate = LocalDate.parse(date);
-        TimeSessionDailyOutputDto totalTime = getProjectTotalTimeUseCase.getDailyTotalTime(email, localDate);
+
+        // Calcular el rango del día
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.plusDays(1).atStartOfDay();
+
+        // Llamar al servicio con el rango
+        TimeSessionDailyOutputDto totalTime =
+                getProjectTotalTimeUseCase.getDailyTotalTime(email, startOfDay, endOfDay);
+
         return ResponseEntity.ok(totalTime);
     }
-
 }

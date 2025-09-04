@@ -35,6 +35,7 @@ public class ProjectController {
     private final UpdateProjectStatusUseCase updateProjectStatusUseCase;
     private final GetProjectByIdUseCase getProjectByIdUseCase;
     private final GetStatiticsUseCase getStatiticsUseCase;
+    
 
     @ApiOperation(value = "Crear proyecto", notes = "Crea un nuevo proyecto para el usuario autenticado.")
     @ApiResponses(value = {
@@ -170,6 +171,7 @@ public class ProjectController {
         BigDecimal pendingEarnings = getStatiticsUseCase.getPendingEarnings();
         return ResponseEntity.ok(pendingEarnings);
     }
+
 
     @GetMapping("/status")
     public ResponseEntity<Page<ProjectOutputDto>> listProjectsByStatus(

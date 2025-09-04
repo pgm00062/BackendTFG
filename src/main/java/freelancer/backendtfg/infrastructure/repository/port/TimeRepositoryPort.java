@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,5 +46,5 @@ public interface TimeRepositoryPort {
     
     Optional<TimeEntity> resumeSession(Long id);
 
-    List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDate date);
+    List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDateTime startOfDay, LocalDateTime endOfDay);
 } 

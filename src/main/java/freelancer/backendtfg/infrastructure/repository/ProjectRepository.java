@@ -5,7 +5,6 @@ import freelancer.backendtfg.infrastructure.repository.entity.ProjectEntity;
 import freelancer.backendtfg.infrastructure.repository.entity.jpaRepository.JpaProjectRepository;
 import freelancer.backendtfg.infrastructure.repository.port.ProjectRepositoryPort;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -57,6 +56,6 @@ public class ProjectRepository implements ProjectRepositoryPort {
 
     @Override
     public List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId) {
-        return jpaRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
+        return jpaRepository.findTop3ByUserIdOrderByStartDateDesc(userId);
     }
 } 

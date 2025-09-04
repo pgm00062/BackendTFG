@@ -17,5 +17,5 @@ public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long>
     @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND p.endDate >= :fromDate")
     BigDecimal getTotalBudgetByStatusAndDateRange(@Param("status") ProjectStatus status, @Param("fromDate") LocalDate fromDate);
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
-    List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
+    List<ProjectEntity> findTop3ByUserIdOrderByStartDateDesc(Long userId);
 }

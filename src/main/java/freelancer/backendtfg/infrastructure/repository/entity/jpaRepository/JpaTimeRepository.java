@@ -8,10 +8,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 public interface JpaTimeRepository extends JpaRepository<TimeEntity, Long> {
     
@@ -56,15 +57,22 @@ public interface JpaTimeRepository extends JpaRepository<TimeEntity, Long> {
     void deleteByProjectId(@Param("projectId") Long projectId);
     
     @Modifying
+    @Transactional
     @Query("UPDATE TimeEntity t SET t.isPaused = true, t.pausedAt = :now WHERE t.id = :id AND t.isActive = true AND t.isPaused = false")
     int pauseSession(@Param("id") Long id, @Param("now") LocalDateTime now);
 
     @Modifying
+    @Transactional
     @Query("UPDATE TimeEntity t SET t.isPaused = false, t.pausedAt = null WHERE t.id = :id AND t.isActive = true AND t.isPaused = true")
     int resumeSession(@Param("id") Long id);
 
-    @Query("SELECT t FROM TimeEntity t WHERE t.user.email = :userEmail AND DATE(t.startTime) = :date AND t.isActive = false")
-    List<TimeEntity> findCompletedSessionsByUserEmailAndDate(@Param("userEmail") String userEmail, @Param("date") LocalDate date);
-
-
+    @Query("SELECT t FROM TimeEntity t " +
+        "WHERE t.user.email = :userEmail " +
+        "AND t.startTime >= :startOfDay " +
+        "AND t.startTime < :endOfDay " +
+        "AND t.isActive = false")
+    List<TimeEntity> findCompletedSessionsByUserEmailAndDate(
+            @Param("userEmail") String userEmail,
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay);
 } 

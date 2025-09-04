@@ -55,14 +55,21 @@ public class TimeEntity {
         if (startTime == null) {
             return Duration.ZERO;
         }
+
         LocalDateTime end = (endTime != null) ? endTime : LocalDateTime.now();
         Duration total = Duration.between(startTime, end);
+
+        // Restar tiempo pausado solo si hubo pausa
         if (isPaused && pausedAt != null) {
-            Duration pausedDuration = Duration.between(pausedAt, LocalDateTime.now());
+            // Usar el menor entre end y now
+            LocalDateTime pauseEnd = (endTime != null) ? endTime : LocalDateTime.now();
+            Duration pausedDuration = Duration.between(pausedAt, pauseEnd);
             total = total.minus(pausedDuration);
         }
-        return total;
+
+        return total.isNegative() ? Duration.ZERO : total; // evitar negativos
     }
+
 
     // Método para obtener la duración en minutos
     public long getDurationInMinutes() {

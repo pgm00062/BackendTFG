@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -88,15 +88,43 @@ public class GetProjectTotalTimeUseCaseImpl implements GetProjectTotalTimeUseCas
     }
 
     @Override
-    public TimeSessionDailyOutputDto getDailyTotalTime(String userEmail, LocalDate date) {
-        List<TimeEntity> sessions = timeRepository.findCompletedSessionsByUserEmailAndDate(userEmail, date);
-        
+    public TimeSessionDailyOutputDto getDailyTotalTime(String userEmail, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+        // Buscar sesiones finalizadas dentro del rango
+        List<TimeEntity> sessions =
+                timeRepository.findCompletedSessionsByUserEmailAndDate(userEmail, startOfDay, endOfDay);
+
+        // Sumar minutos
         long totalMinutes = sessions.stream()
                 .mapToLong(TimeEntity::getDurationInMinutes)
                 .sum();
-        
+
         double totalHours = totalMinutes / 60.0;
-        
+
         return new TimeSessionDailyOutputDto(totalHours, totalMinutes);
+    }
+
+    @Override
+    public Double getTotalHoursForProject(String userEmail, Long projectId) {
+        // Verificar que el usuario existe
+        UserEntity user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+        
+        // Verificar que el proyecto existe
+        ProjectEntity project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new UserNotFoundException("Proyecto no encontrado"));
+        
+        // Obtener todas las sesiones finalizadas del proyecto para este usuario
+        List<TimeEntity> completedSessions = timeRepository.findCompletedSessionsByProjectIdAndUserEmail(projectId, userEmail);
+        
+        // Calcular tiempo total (reutiliza lógica del método existente)
+        long totalMinutes = 0;
+        for (TimeEntity session : completedSessions) {
+            if (session.getEndTime() != null && session.getStartTime() != null) {
+                Duration sessionDuration = Duration.between(session.getStartTime(), session.getEndTime());
+                totalMinutes += sessionDuration.toMinutes();
+            }
+        }
+        
+        return totalMinutes / 60.0;  // Devuelve horas como Double
     }
 } 
