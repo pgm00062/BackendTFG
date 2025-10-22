@@ -19,4 +19,5 @@ public interface ProjectRepositoryPort {
     BigDecimal getTotalBudgetByStatus(ProjectStatus status, LocalDate fromDate);
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
     List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
+    BigDecimal getTotalBudgetByStatusAndYear(ProjectStatus status, int year);
 } 

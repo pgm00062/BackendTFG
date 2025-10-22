@@ -11,6 +11,7 @@ import freelancer.backendtfg.infrastructure.controller.dto.input.timesInput.Time
 import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionDailyOutputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.timesOutput.TimeSessionOutputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectTotalTimeOutputDto;
+import freelancer.backendtfg.application.port.timeUseCasePort.GetStatiticsTimeUseCase;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -19,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -38,6 +38,7 @@ public class TimeController {
     private final GetActiveTimeSessionUseCase getActiveTimeSessionUseCase;
     private final GetProjectTotalTimeUseCase getProjectTotalTimeUseCase;
     private final PauseResumeTimeSessionUseCase pauseResumeTimeSessionUseCase;
+    private final GetStatiticsTimeUseCase getStatiticsTimeUseCase;
 
     @ApiOperation(value = "Iniciar sesión de tiempo", notes = "Inicia una nueva sesión de tiempo para el usuario autenticado.")
     @ApiResponses(value = {
@@ -164,6 +165,30 @@ public class TimeController {
         TimeSessionDailyOutputDto totalTime =
                 getProjectTotalTimeUseCase.getDailyTotalTime(email, startOfDay, endOfDay);
 
+        return ResponseEntity.ok(totalTime);
+    }
+
+    @ApiOperation(value = "Tiempo total en el último mes", notes = "Obtiene el tiempo total trabajado en el último mes para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tiempo total obtenido"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/total/last-month")
+    public ResponseEntity<TimeSessionDailyOutputDto> getTotalTimeLastMonth(@AuthenticationPrincipal String email) {
+        TimeSessionDailyOutputDto totalTime = getStatiticsTimeUseCase.getTotalTimeLastMonth(email);
+        return ResponseEntity.ok(totalTime);
+    }
+
+    @ApiOperation(value = "Tiempo total en el año actual", notes = "Obtiene el tiempo total trabajado en el año actual para el usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tiempo total obtenido"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/total/this-year")
+    public ResponseEntity<TimeSessionDailyOutputDto> getTotalTimeThisYear(@AuthenticationPrincipal String email) {
+        TimeSessionDailyOutputDto totalTime = getStatiticsTimeUseCase.getTotalTimeThisYear(email);
         return ResponseEntity.ok(totalTime);
     }
 }

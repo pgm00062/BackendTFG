@@ -16,6 +16,8 @@ public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long>
     Page<ProjectEntity> findByUserIdAndNameContainingIgnoreCase(Long userId, String name, Pageable pageable);
     @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND p.endDate >= :fromDate")
     BigDecimal getTotalBudgetByStatusAndDateRange(@Param("status") ProjectStatus status, @Param("fromDate") LocalDate fromDate);
+    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND YEAR(p.endDate) = :year")
+    BigDecimal getTotalBudgetByStatusAndYear(@Param("status") ProjectStatus status, @Param("year") int year);
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
     List<ProjectEntity> findTop3ByUserIdOrderByStartDateDesc(Long userId);
 }

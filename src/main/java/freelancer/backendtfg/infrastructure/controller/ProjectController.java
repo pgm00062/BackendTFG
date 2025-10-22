@@ -148,7 +148,7 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
-    @ApiOperation(value = "Obtener estadísticas de ganancias", notes = "Obtiene las estadísticas de ganancias del usuario autenticado, incluyendo ganancias del último mes y ganancias pendientes.")
+    @ApiOperation(value = "Obtener estadísticas de ganancias último mes", notes = "Obtiene las estadísticas de ganancias del usuario autenticado, incluyendo ganancias del último mes y ganancias pendientes.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Estadísticas obtenidas exitosamente"),
             @ApiResponse(code = 401, message = "No autorizado"),
@@ -157,6 +157,18 @@ public class ProjectController {
     @GetMapping("/earnings-last-month")
     public ResponseEntity<BigDecimal> getEarningsLastMonth() {
         BigDecimal earnings = getStatiticsUseCase.getEarningsLastMonth();
+        return ResponseEntity.ok(earnings);
+    }
+
+    @ApiOperation(value = "Obtener estadísticas de ganancias último año", notes = "Obtiene las estadísticas de ganancias del usuario autenticado, incluyendo ganancias del último año y ganancias pendientes.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Estadísticas obtenidas exitosamente"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/earnings-this-year")
+    public ResponseEntity<BigDecimal> getEarningsThisYear() {
+        BigDecimal earnings = getStatiticsUseCase.getEarningsThisYear();
         return ResponseEntity.ok(earnings);
     }
 
@@ -171,7 +183,6 @@ public class ProjectController {
         BigDecimal pendingEarnings = getStatiticsUseCase.getPendingEarnings();
         return ResponseEntity.ok(pendingEarnings);
     }
-
 
     @GetMapping("/status")
     public ResponseEntity<Page<ProjectOutputDto>> listProjectsByStatus(

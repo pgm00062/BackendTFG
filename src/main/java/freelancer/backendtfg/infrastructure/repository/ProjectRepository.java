@@ -58,4 +58,9 @@ public class ProjectRepository implements ProjectRepositoryPort {
     public List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId) {
         return jpaRepository.findTop3ByUserIdOrderByStartDateDesc(userId);
     }
+
+    @Override
+    public BigDecimal getTotalBudgetByStatusAndYear(ProjectStatus status, int year) {
+        return jpaRepository.getTotalBudgetByStatusAndYear(status, year);
+    }
 } 

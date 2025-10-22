@@ -47,4 +47,8 @@ public interface TimeRepositoryPort {
     Optional<TimeEntity> resumeSession(Long id);
 
     List<TimeEntity> findCompletedSessionsByUserEmailAndDate(String userEmail, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    List<TimeEntity> findCompletedSessionsByUserEmailAndDateRange(String userEmail, LocalDateTime start, LocalDateTime end);
+
+    List<TimeEntity> findCompletedSessionsByUserEmailAndYear(String userEmail, int year);
 } 

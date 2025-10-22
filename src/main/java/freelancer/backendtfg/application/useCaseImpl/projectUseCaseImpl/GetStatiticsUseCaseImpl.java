@@ -25,4 +25,9 @@ public class GetStatiticsUseCaseImpl implements GetStatiticsUseCase {
         LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
         return projectRepositoryPort.getTotalBudgetByStatus(ProjectStatus.EN_PROGRESO,oneMonthAgo);
     }
+    @Override
+    public BigDecimal getEarningsThisYear() {
+        int currentYear = LocalDate.now().getYear();
+        return projectRepositoryPort.getTotalBudgetByStatusAndYear(ProjectStatus.TERMINADO, currentYear);
+    }
 }

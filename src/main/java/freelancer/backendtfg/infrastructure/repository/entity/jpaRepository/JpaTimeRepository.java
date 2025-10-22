@@ -75,4 +75,10 @@ public interface JpaTimeRepository extends JpaRepository<TimeEntity, Long> {
             @Param("userEmail") String userEmail,
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay);
+            
+    @Query("SELECT t FROM TimeEntity t WHERE t.user.email = :userEmail AND t.isActive = false AND t.endTime IS NOT NULL AND t.endTime >= :start AND t.endTime <= :end")
+    List<TimeEntity> findCompletedSessionsByUserEmailAndDateRange(@Param("userEmail") String userEmail, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("SELECT t FROM TimeEntity t WHERE t.user.email = :userEmail AND t.isActive = false AND t.endTime IS NOT NULL AND YEAR(t.endTime) = :year")
+    List<TimeEntity> findCompletedSessionsByUserEmailAndYear(@Param("userEmail") String userEmail, @Param("year") int year);
 } 
