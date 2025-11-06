@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+
 import java.time.Duration;
 
 @Data
@@ -57,6 +60,12 @@ public class TimeSessionOutputDto {
 
     @ApiModelProperty(value = "Duración de la sesión formateada legiblemente", example = "2h 30m")
     private String formattedDuration;
+
+    @ApiModelProperty(value = "Indica si la sesión de tiempo está pausada", example = "true")
+    private boolean isPaused = false; 
+
+    @ApiModelProperty(value = "La hora en la que la sesión de tiempo fue pausada", example = "2025-08-07T10:00:00")
+    private LocalDateTime pausedAt;
     
     // Método para formatear la duración de manera legible
     public String getFormattedDuration() {
