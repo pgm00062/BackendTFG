@@ -16,8 +16,11 @@ public interface ProjectRepositoryPort {
     Page<ProjectEntity> findByUserIdAndNameContainingIgnoreCase(Long userId, String name, Pageable pageable);
     ProjectEntity save(ProjectEntity project);
     void delete(ProjectEntity project);
-    BigDecimal getTotalBudgetByStatus(ProjectStatus status, LocalDate fromDate);
+    
+    // Métodos de estadísticas con filtro por usuario
+    BigDecimal getTotalBudgetByStatusAndUser(ProjectStatus status, Long userId, LocalDate fromDate);
+    BigDecimal getTotalBudgetByStatusUserAndYear(ProjectStatus status, Long userId, int year);
+    
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
     List<ProjectEntity> findTop3ByUserIdOrderByCreatedAtDesc(Long userId);
-    BigDecimal getTotalBudgetByStatusAndYear(ProjectStatus status, int year);
 } 

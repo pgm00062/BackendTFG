@@ -5,6 +5,7 @@ import freelancer.backendtfg.domain.enums.ProjectStatus;
 import freelancer.backendtfg.infrastructure.controller.dto.input.projectsInput.ProjectCreateInputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDto;
 import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.ProjectOutputDtoParcial;
+import freelancer.backendtfg.infrastructure.controller.dto.output.projectsOutput.EarningsRateSummaryOutputDto;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -35,6 +36,7 @@ public class ProjectController {
     private final UpdateProjectStatusUseCase updateProjectStatusUseCase;
     private final GetProjectByIdUseCase getProjectByIdUseCase;
     private final GetStatiticsUseCase getStatiticsUseCase;
+    private final GetEarningsRateUseCase getEarningsRateUseCase;
     
 
     @ApiOperation(value = "Crear proyecto", notes = "Crea un nuevo proyecto para el usuario autenticado.")
@@ -155,8 +157,8 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     @GetMapping("/earnings-last-month")
-    public ResponseEntity<BigDecimal> getEarningsLastMonth() {
-        BigDecimal earnings = getStatiticsUseCase.getEarningsLastMonth();
+    public ResponseEntity<BigDecimal> getEarningsLastMonth(@AuthenticationPrincipal String email) {
+        BigDecimal earnings = getStatiticsUseCase.getEarningsLastMonth(email);
         return ResponseEntity.ok(earnings);
     }
 
@@ -167,8 +169,8 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     @GetMapping("/earnings-this-year")
-    public ResponseEntity<BigDecimal> getEarningsThisYear() {
-        BigDecimal earnings = getStatiticsUseCase.getEarningsThisYear();
+    public ResponseEntity<BigDecimal> getEarningsThisYear(@AuthenticationPrincipal String email) {
+        BigDecimal earnings = getStatiticsUseCase.getEarningsThisYear(email);
         return ResponseEntity.ok(earnings);
     }
 
@@ -179,8 +181,8 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "Error interno del servidor")
     })
     @GetMapping("/pending-earnings")
-    public ResponseEntity<BigDecimal> getPendingEarnings() {
-        BigDecimal pendingEarnings = getStatiticsUseCase.getPendingEarnings();
+    public ResponseEntity<BigDecimal> getPendingEarnings(@AuthenticationPrincipal String email) {
+        BigDecimal pendingEarnings = getStatiticsUseCase.getPendingEarnings(email);
         return ResponseEntity.ok(pendingEarnings);
     }
 
@@ -198,5 +200,18 @@ public class ProjectController {
     public ResponseEntity<List<ProjectOutputDtoParcial>> getLastThreeProjects(@AuthenticationPrincipal String email){
         List<ProjectOutputDtoParcial> projects = listUserProjectsUseCase.getLastProject(email);
         return ResponseEntity.ok(projects);
+    }
+
+    @ApiOperation(value = "Obtener tasa de ganancia por hora", notes = "Calcula la relación entre ganancias y horas trabajadas para cada proyecto y la media general del usuario autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tasa de ganancia calculada exitosamente"),
+            @ApiResponse(code = 401, message = "No autorizado"),
+            @ApiResponse(code = 404, message = "Usuario no encontrado"),
+            @ApiResponse(code = 500, message = "Error interno del servidor")
+    })
+    @GetMapping("/earnings-rate")
+    public ResponseEntity<EarningsRateSummaryOutputDto> getEarningsRate(@AuthenticationPrincipal String email) {
+        EarningsRateSummaryOutputDto earningsRate = getEarningsRateUseCase.getEarningsRate(email);
+        return ResponseEntity.ok(earningsRate);
     }
 }

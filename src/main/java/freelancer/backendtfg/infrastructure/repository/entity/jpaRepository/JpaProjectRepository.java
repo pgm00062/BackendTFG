@@ -14,10 +14,30 @@ import java.util.List;
 public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long> {
     Page<ProjectEntity> findByUserId(Long userId, Pageable pageable);
     Page<ProjectEntity> findByUserIdAndNameContainingIgnoreCase(Long userId, String name, Pageable pageable);
-    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND p.endDate >= :fromDate")
-    BigDecimal getTotalBudgetByStatusAndDateRange(@Param("status") ProjectStatus status, @Param("fromDate") LocalDate fromDate);
-    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p WHERE p.status = :status AND YEAR(p.endDate) = :year")
-    BigDecimal getTotalBudgetByStatusAndYear(@Param("status") ProjectStatus status, @Param("year") int year);
+    
+    // Query para ganancias del último mes (con filtro de usuario y fecha)
+    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p " +
+           "WHERE p.status = :status AND p.user.id = :userId AND p.endDate >= :fromDate")
+    BigDecimal getTotalBudgetByStatusUserAndDateRange(
+            @Param("status") ProjectStatus status, 
+            @Param("userId") Long userId, 
+            @Param("fromDate") LocalDate fromDate);
+    
+    // Query para ganancias pendientes (sin filtro de fecha)
+    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p " +
+           "WHERE p.status = :status AND p.user.id = :userId")
+    BigDecimal getTotalBudgetByStatusAndUser(
+            @Param("status") ProjectStatus status, 
+            @Param("userId") Long userId);
+    
+    // Query para ganancias del año actual (con filtro de usuario y año)
+    @Query("SELECT COALESCE(SUM(p.budget), 0) FROM ProjectEntity p " +
+           "WHERE p.status = :status AND p.user.id = :userId AND YEAR(p.endDate) = :year")
+    BigDecimal getTotalBudgetByStatusUserAndYear(
+            @Param("status") ProjectStatus status, 
+            @Param("userId") Long userId, 
+            @Param("year") int year);
+    
     Page<ProjectEntity> findByUserIdAndStatus(Long id, ProjectStatus status, Pageable pageable);
     List<ProjectEntity> findTop3ByUserIdOrderByStartDateDesc(Long userId);
 }

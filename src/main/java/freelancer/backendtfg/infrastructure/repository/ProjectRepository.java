@@ -45,8 +45,12 @@ public class ProjectRepository implements ProjectRepositoryPort {
     }
 
     @Override
-    public BigDecimal getTotalBudgetByStatus(ProjectStatus status, LocalDate fromDate){
-        return jpaRepository.getTotalBudgetByStatusAndDateRange(status, fromDate);
+    public BigDecimal getTotalBudgetByStatusAndUser(ProjectStatus status, Long userId, LocalDate fromDate) {
+        if (fromDate != null) {
+            return jpaRepository.getTotalBudgetByStatusUserAndDateRange(status, userId, fromDate);
+        } else {
+            return jpaRepository.getTotalBudgetByStatusAndUser(status, userId);
+        }
     }
 
     @Override
@@ -60,7 +64,7 @@ public class ProjectRepository implements ProjectRepositoryPort {
     }
 
     @Override
-    public BigDecimal getTotalBudgetByStatusAndYear(ProjectStatus status, int year) {
-        return jpaRepository.getTotalBudgetByStatusAndYear(status, year);
+    public BigDecimal getTotalBudgetByStatusUserAndYear(ProjectStatus status, Long userId, int year) {
+        return jpaRepository.getTotalBudgetByStatusUserAndYear(status, userId, year);
     }
 } 
