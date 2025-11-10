@@ -24,5 +24,7 @@ public interface TimeMapper {
     @Mapping(target = "durationInMinutes", expression = "java(entity.getDurationInMinutes())")
     @Mapping(target = "durationInHours", expression = "java(entity.getDurationInHours())")
     @Mapping(target = "formattedDuration", expression = "java(entity.getDuration().toHours() > 0 ? String.format(\"%dh %dm\", entity.getDuration().toHours(), entity.getDuration().toMinutes() % 60) : String.format(\"%dm\", entity.getDuration().toMinutes()))")
+    @Mapping(target = "paused", source = "paused")
+    @Mapping(target = "pausedAt", source = "pausedAt")
     TimeSessionOutputDto toOutputDto(TimeEntity entity);
 } 

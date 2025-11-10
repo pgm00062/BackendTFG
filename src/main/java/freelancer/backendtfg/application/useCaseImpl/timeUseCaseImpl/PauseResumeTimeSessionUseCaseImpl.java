@@ -26,8 +26,11 @@ public class PauseResumeTimeSessionUseCaseImpl implements PauseResumeTimeSession
             throw new IllegalArgumentException("La sesión ya está pausada");
         }
         
-        TimeEntity paused = timeRepository.pauseSession(activeSession.getId())
-                .orElseThrow(() -> new IllegalStateException("Error al pausar sesión"));
+        // Usar el método de la entidad para pausar
+        activeSession.pauseSession();
+        
+        // Guardar la entidad modificada
+        TimeEntity paused = timeRepository.save(activeSession);
         
         return timeMapper.toOutputDto(paused);
     }
@@ -41,8 +44,11 @@ public class PauseResumeTimeSessionUseCaseImpl implements PauseResumeTimeSession
             throw new IllegalArgumentException("La sesión no está pausada");
         }
         
-        TimeEntity resumed = timeRepository.resumeSession(activeSession.getId())
-                .orElseThrow(() -> new IllegalStateException("Error al reanudar sesión"));
+        // Usar el método de la entidad para reanudar
+        activeSession.resumeSession();
+        
+        // Guardar la entidad modificada
+        TimeEntity resumed = timeRepository.save(activeSession);
         
         return timeMapper.toOutputDto(resumed);
     }
