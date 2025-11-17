@@ -3,6 +3,11 @@ FROM eclipse-temurin:8-jdk AS build
 WORKDIR /app
 
 COPY . .
+
+# Dar permisos de ejecución al wrapper de Maven
+RUN chmod +x mvnw
+
+# Build del proyecto
 RUN ./mvnw clean package -DskipTests
 
 # Etapa de runtime
