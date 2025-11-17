@@ -14,7 +14,7 @@ import javax.persistence.Column;
 import java.time.Duration;
 
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(description = "DTO de salida para una sesión de tiempo")
@@ -62,7 +62,7 @@ public class TimeSessionOutputDto {
     private String formattedDuration;
 
     @ApiModelProperty(value = "Indica si la sesión de tiempo está pausada", example = "true")
-    private boolean isPaused = false; 
+    private boolean paused = false; 
 
     @ApiModelProperty(value = "La hora en la que la sesión de tiempo fue pausada", example = "2025-08-07T10:00:00")
     private LocalDateTime pausedAt;

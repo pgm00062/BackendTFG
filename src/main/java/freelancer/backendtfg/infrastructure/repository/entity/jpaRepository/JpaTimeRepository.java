@@ -56,12 +56,12 @@ public interface JpaTimeRepository extends JpaRepository<TimeEntity, Long> {
     @Query("DELETE FROM TimeEntity t WHERE t.project.id = :projectId")
     void deleteByProjectId(@Param("projectId") Long projectId);
     
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE TimeEntity t SET t.isPaused = true, t.pausedAt = :now WHERE t.id = :id AND t.isActive = true AND t.isPaused = false")
     int pauseSession(@Param("id") Long id, @Param("now") LocalDateTime now);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE TimeEntity t SET t.isPaused = false, t.pausedAt = null WHERE t.id = :id AND t.isActive = true AND t.isPaused = true")
     int resumeSession(@Param("id") Long id);
