@@ -55,10 +55,6 @@ public class InvoiceRepository implements InvoiceRepositoryPort {
         return jpaInvoiceRepository.existsByInvoiceNumber(invoiceNumber);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        jpaInvoiceRepository.deleteById(id);
-    }
 
     @Override
     public long countByUserId(Long userId) {

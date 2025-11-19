@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import freelancer.backendtfg.application.port.invoiceUseCasePort.DeleteInvoiceUseCase;
 import javax.validation.Valid;
 
 @RestController
@@ -28,7 +27,6 @@ public class InvoiceController {
     private final UpdateInvoiceUseCase updateInvoiceUseCase;
     private final ListUserInvoicesUseCase listUserInvoicesUseCase;
     private final GetInvoiceByIdUseCase getInvoiceByIdUseCase;
-    private final DeleteInvoiceUseCase deleteInvoiceUseCase;
 
     @ApiOperation(value = "Crear factura", notes = "Crea una nueva factura para el usuario autenticado.")
     @ApiResponses(value = {
@@ -92,18 +90,4 @@ public class InvoiceController {
         return ResponseEntity.ok(invoice);
     }
 
-    @ApiOperation(value = "Eliminar factura", notes = "Elimina una factura por su ID.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Factura eliminada exitosamente"),
-            @ApiResponse(code = 401, message = "No autorizado"),
-            @ApiResponse(code = 404, message = "Factura no encontrada"),
-            @ApiResponse(code = 500, message = "Error interno del servidor")
-    })
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteInvoice(
-            @PathVariable Long id,
-            @AuthenticationPrincipal String email) {
-        deleteInvoiceUseCase.deleteInvoice(id, email);
-        return ResponseEntity.noContent().build();
-    }
 }

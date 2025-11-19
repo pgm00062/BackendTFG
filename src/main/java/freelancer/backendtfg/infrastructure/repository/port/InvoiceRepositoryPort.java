@@ -22,8 +22,6 @@ public interface InvoiceRepositoryPort {
     List<InvoiceEntity> findByUserIdAndStatus(Long userId, String status);
     
     boolean existsByInvoiceNumber(String invoiceNumber);
-    
-    void deleteById(Long id);
 
     void delete(InvoiceEntity invoice);
     
